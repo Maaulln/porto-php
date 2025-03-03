@@ -1,21 +1,20 @@
 <?php
 include '../../services/database.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST['submit'])) {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $message = $_POST['message'];
 
-    // Cek apakah variabel tidak kosong
     if (empty($name) || empty($email) || empty($message)) {
         die("Data tidak boleh kosong!");
     }
 
-    // Gunakan prepared statement untuk keamanan
     $stmt = $conn->prepare("INSERT INTO kontak (name, email, message) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $name, $email, $message);
 
     if ($stmt->execute()) {
+      header("Location: index.php");
         echo "Data berhasil disimpan!";
     } else {
         echo "Error: " . $stmt->error;
@@ -25,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
 
 <section class="section contact" id="contact" aria-label="contact">
           <div class="container">
@@ -67,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             </div>
 
-            <form action="contact.php" class="contact-form" method="POST">
+            <form action="" class="contact-form" method="POST">
 
               <input type="text" name="name" aria-label="name" placeholder="Name" required class="input-field">
 
